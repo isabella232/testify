@@ -50,8 +50,13 @@ func ObjectsAreEqual(expected, actual interface{}) bool {
 		}
 		return bytes.Equal(exp, act)
 	}
-	return reflect.DeepEqual(expected, actual)
 
+	if reflect.DeepEqual(expected, actual) {
+		return true
+	}
+
+	// Add back https://github.com/stretchr/testify/commit/842aeb8181a59ae6d0fac42eaef90ca01ba59c53 for compat.
+	return fmt.Sprintf("%#v", expected) == fmt.Sprintf("%#v", actual)
 }
 
 // ObjectsAreEqualValues gets whether two objects are equal, or if their
